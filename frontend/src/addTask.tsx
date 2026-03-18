@@ -8,6 +8,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { supabase } from "../src/supabase-client"
 import { useNavigate } from 'react-router-dom'
 import {toast} from'react-toastify'
+import Sidebar from './components/Sidebar'
 
 function addTask() {
     const [date, setDate] = useState<Date | undefined>(new Date())
@@ -20,28 +21,45 @@ function addTask() {
   const navigate = useNavigate()
 
   const handleSubmit = async () => {
-    const { data, error } = await supabase.from("tasks").insert([{
-      title: title,
-      status: status,
-      user_id: userId,
-      description: description,
-      expiry_date: date
+  try {
+     const { data: userData, error: userError } = await supabase.auth.getUser()
+
+    if (userError) throw userError
+
+    const user = userData.user
+
+    if (!user) {
+      toast.error("User not logged in")
+      return
     }
-    ]).select()
+    const { data, error } = await supabase
+      .from("tasks")
+      .insert([{
+        title: title,
+        status: status,
+       user_id: user.id,
+        description: description,
+        expiry_date: date
+      }])
+      .select()
+
     if (error) {
-      console.log("Error on inserting", error.message)
-      toast.error("Error on instering")
+      throw error  
     }
-    else {
-      console.log("inserted data", data)
-      navigate("/")
-      toast.success("Task inserted")
-    }
-    
+
+    console.log("inserted data", data)
+    toast.success("Task inserted")
+    navigate("/")
+
+  } catch (err: any) {
+    console.log("Error on inserting:", err.message)
+    toast.error("Error on inserting")
   }
+}
   return (
-    <div className='bg-gray-200  flex justify-center items-center flex flex-col'>
-          <div className='w-[300px] md:w-[500px] bg-white p-10 shadow border border-gray-100 rounded m-4'>
+    <div className='bg-gray-200  flex justify-center items-center flex flex-col min-h-screen'>
+      <Sidebar/>
+          <div className='w-[300px] md:w-[500px] bg-white  shadow border border-gray-100 rounded ml-67 p-5 mt-5'>
           <h3 className='text-blue-500 font-bold'>Add Task</h3>
           <Label htmlFor="title" className='m-2'>Title <span className='text-red-500'>*</span></Label>
           <Input className='focus:outline-none min-w-[400] border border-gray-300 shadow' value={title}
@@ -49,10 +67,10 @@ function addTask() {
           <Label htmlFor="status" className='m-2'>Status <span className='text-red-500'>*</span></Label>
           <Input className='focus:outline-none min-w-[400] border border-gray-300 shadow' value={status}
             onChange={(e) => setStatus(e.target.value)} />
-          <Label htmlFor="userId" className='m-2'>User Id <span className='text-red-500'>*</span></Label>
+          {/* <Label htmlFor="userId" className='m-2'>User Id <span className='text-red-500'>*</span></Label>
           <Input className='focus:outline-none min-w-[400] border border-gray-300 shadow'
             value={userId}
-            onChange={(e) => setUserId(e.target.value)} />
+            onChange={(e) => setUserId(e.target.value)} /> */}
           <Label htmlFor="description" className='m-2'>Description <span className='text-red-500'>*</span></Label>
           <Textarea value={description}
             onChange={(e) => setDescription(e.target.value)} className='border border-gray-300 shadow' />

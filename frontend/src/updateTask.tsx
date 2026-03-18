@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Calendar } from "@/components/ui/calendar"
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import Sidebar from './components/Sidebar'
 
 function updateTask() {
     const navigate=useNavigate()
@@ -16,46 +17,71 @@ function updateTask() {
     const [status, setStatus] = useState('')
     const [description, setDescription] = useState('')
     const [date, setDate] = useState(null)
-    const fetchTask = async () => {
-        const { data, error } = await supabase
-            .from("tasks")
-            .select("*")
-            .eq("id", id)
-            .single()
+    const [task,setTask]=useState({})
+const[loading,setLoading]=useState(false)
 
-        if (data) {
-            setTitle(data.title)
-            setStatus(data.status)
-            setDescription(data.description)
-            setDate(data.expiry_date ? new Date(data.expiry_date) : null)
-        }
+    const fetchTask = async () => {
+  try {
+    setLoading(true)
+    const { data, error } = await supabase
+      .from("tasks")
+      .select("*")
+      .eq("id", id)
+      .single()
+
+    if (error) {
+      throw error   
     }
+
+    if (data) {
+      setTitle(data.title)
+      setStatus(data.status)
+      setDescription(data.description)
+      setDate(data.expiry_date ? new Date(data.expiry_date) : null)
+      setTask(data)
+    }
+
+  } catch (err: any) {
+    console.error("Error fetching task:", err.message)
+  }
+  finally{
+    setLoading(false)
+  }
+}
+    if(!task) return<p>Loading ....</p>
     useEffect(() => {
         fetchTask()
     }, [])
     const handleUpdate = async () => {
-        const { data, error } = await supabase
-            .from('tasks')
-            .update({
-                title: title,
-                status: status,
-                description: description,
-                expiry_date: date
-            })
-            .eq('id', id)
-            .select()
+  try {
+    const { data, error } = await supabase
+      .from('tasks')
+      .update({
+        title: title,
+        status: status,
+        description: description,
+        expiry_date: date
+      })
+      .eq('id', id)
+      .select()
 
-        if (error) {
-            toast.error(" Update failed")
-            console.log(error)
-        } else {
-            toast.success("Task updated")
-            navigate("/")
-        }
+    if (error) {
+      throw error  
     }
+
+    toast.success("Task updated")
+    navigate("/")
+
+  } catch (err: any) {
+    toast.error("Update failed")
+    console.log(err.message)
+  }
+}
     return (
         <div className='bg-gray-200  flex justify-center items-center flex flex-col'>
-            <div className='w-[300px] md:w-[500px] bg-white p-10 shadow border border-gray-100 rounded m-4'>
+            <Sidebar/>
+               {loading && <p className="mb-2 text-blue-500">Loading...</p>}
+            <div className='w-[300px] md:w-[500px] bg-white p-10 shadow border border-gray-100 rounded ml-67 p-5 mt-6'>
                 <h3 className='text-blue-500 font-bold'>Update Task</h3>
                 <Label htmlFor="title" className='m-2'>Title <span className='text-red-500'>*</span></Label>
                 <Input className='focus:outline-none min-w-[400] border border-gray-300 shadow' value={title}
