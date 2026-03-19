@@ -1,8 +1,8 @@
 import React from 'react'
 import { useEffect, useState } from "react"
-import { supabase } from './supabase-client'
+import { supabase } from '../supabase-client'
 import { useNavigate } from 'react-router-dom'
-import Sidebar from './components/Sidebar'
+import Sidebar from '../components/Sidebar'
 export default function dashboard() {
     const navigate=useNavigate()
     const [user, setUser] = useState<any>(null)

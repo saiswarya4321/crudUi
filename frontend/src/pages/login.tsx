@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from "../src/supabase-client"
+import { supabase } from "../../src/supabase-client"
 
 
 export default function login() {

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from "../src/supabase-client"
+import { supabase } from "../supabase-client"
 
 export default function signUp() {
 
@@ -14,6 +14,7 @@ export default function signUp() {
     const [loading, setLoading] = useState(false)
      const [showPassword, setShowPassword] = useState(false)
      const [name,setName]=useState('')
+     const[userId,setuserId]=useState('')
     
     const handleSignup = async () => {
   try {
@@ -39,7 +40,8 @@ if (!user) {
     const { error: insertError } = await supabase.from("users").insert([{
   name,
   email,
-  id: user.id
+  id: user.id,
+  user_id:userId
 }])
 
 if (insertError) throw insertError
@@ -89,8 +91,8 @@ if (insertError) throw insertError
       </button>
 
     </div>
-   {/* <Label htmlFor="name" className='text-gray-400 m-2 text-bold'>Your user_id<span className='text-xs text-red-600'>*</span></Label>
-    <Input className='border border-gray-300'onChange={(e)=>setUserId(e.target.value)} value={userId}  placeholder="Enter name"/> */}
+   <Label htmlFor="name" className='text-gray-400 m-2 text-bold'>Your user_id<span className='text-xs text-red-600'>*</span></Label>
+    <Input className='border border-gray-300'onChange={(e)=>setuserId(e.target.value)} value={userId}  placeholder="Enter name"/>
     
 <Button variant="outline" className='bg-green-600 pt-3 pb-3 m-3 border border-none text-white' onClick={handleSignup}>SIGNUP</Button>
 <div onClick={()=>navigate("/login")} className='text-sm text-blue-500 text-bold'>Already have an account ?<span className='text-bold text-violet-500 hover:text-violet-700'> LOGIN</span></div>

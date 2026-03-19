@@ -82,38 +82,14 @@ function App() {
          
         <Sidebar/>
         
-          <div className='flex-1 bg-blue-50  w-[300] md:w-[300px] shadow rounded  flex flex-col gap-4  justify-center items-center m-2 ml-67 p-5'>
+          <div className='flex-1 bg-blue-50  w-[300] md:w-[600px] shadow rounded  flex flex-col   justify-center items-center m-2 ml-67 p-5'>
             <Button onClick={()=>navigate("/addtask")} className='m-3 bg-blue-600 min-w-[200px] p-3 mb-2 text-white rounded shadow-xl hover:bg-blue-300'>ADD MORE</Button>
-          <h2 className='text-blue-400 font-bold'>List of tasks</h2>
+          <Button className='m-3 bg-green-600 min-w-[200px] p-3 mb-2 text-white rounded shadow-xl hover:bg-blue-300' onClick={()=>navigate("/list")}>
+            VIEW
+          </Button>
             </div> 
        
-        <div className='flex-1 bg-blue-50  w-[300] md:w-[1200px] shadow rounded  flex flex-wrap gap-4  justify-center items-center m-2 ml-67 p-5'>
-            {loading && <p className="mb-2 text-blue-500">Loading...</p>}
-          
-          {tasks.length === 0 ? (
-            <p>No tasks found</p>
-          ) : (
-            tasks.map((task) => (
-              <div key={task.id} className=' flex  flex-row justify-between w-full md:w-1/3 lg:w-1/5 p-3 m-2 bg-blue-100 rounded-xl shadow-xl '>
-                
-<div onClick={() => navigate(`/task/${task.id}`)} className='border border-blue-500 p-3 rounded shadow-xl flex flex-col w-full md:w-[400px] hover:bg-blue-300 text-blue-800 font-bold'>
-                   <h1 >{task.title}
-                    
-                   </h1>
-                   <span className='text-xs text-blue-400'>{task.status}</span>
-                </div>
-               
-                <div className='flex flex-col p-0 ml-3 text-gray-300 '>
-                  <Button className='bg-blue-700 p-3 hover:bg-blue-400'onClick={()=>navigate(`/update/${task.id}`)}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench-icon lucide-wrench"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z"/></svg></Button>
-                  <Button className='bg-red-700 p-3  hover:bg-red-400'onClick={()=>handleDelete(task.id)}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></Button>
-                </div>
-                </div>
-                
-             
-            ))
-          )}
-        </div>
-
+        
       </div>
 
     </>

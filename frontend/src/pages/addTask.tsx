@@ -1,14 +1,14 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { Button } from './components/ui/button'
+import { Button } from '../components/ui/button'
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Calendar } from "@/components/ui/calendar"
-import { supabase } from "../src/supabase-client"
+import { supabase } from "../supabase-client"
 import { useNavigate } from 'react-router-dom'
 import {toast} from'react-toastify'
-import Sidebar from './components/Sidebar'
+import Sidebar from '../components/Sidebar'
 
 function addTask() {
     const [date, setDate] = useState<Date | undefined>(new Date())
@@ -19,9 +19,44 @@ function addTask() {
   const [tasks, setTasks] = useState([])
 
   const navigate = useNavigate()
+  const validateTask = () => {
+  if (!title || title.trim() === "") {
+    toast.error("Title is required")
+    return false
+  }
+
+  if (title.length < 3) {
+    toast.error("Title must be at least 3 characters")
+    return false
+  }
+
+  if (!status) {
+    toast.error("Status is required")
+    return false
+  }
+
+  if (!description || description.trim() === "") {
+    toast.error("Description is required")
+    return false
+  }
+
+  if (!date) {
+    toast.error("Expiry date is required")
+    return false
+  }
+
+  
+  if (new Date(date) < new Date()) {
+    toast.error("Expiry date cannot be in the past")
+    return false
+  }
+
+  return true 
+}
 
   const handleSubmit = async () => {
   try {
+    if(!validateTask()) return;
      const { data: userData, error: userError } = await supabase.auth.getUser()
 
     if (userError) throw userError
@@ -49,11 +84,17 @@ function addTask() {
 
     console.log("inserted data", data)
     toast.success("Task inserted")
-    navigate("/")
+    navigate("/list")
 
   } catch (err: any) {
     console.log("Error on inserting:", err.message)
-    toast.error("Error on inserting")
+
+    
+    if (err.message.includes("permission")) {
+      toast.error("Not allowed (RLS policy)")
+    } else {
+      toast.error("Error on inserting")
+    }
   }
 }
   return (
