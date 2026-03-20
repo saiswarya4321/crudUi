@@ -18,7 +18,10 @@ function taskDetails() {
      const fetchTask = async () => {
     const { data, error } = await supabase
       .from("tasks")
-      .select("*")
+       .select(`
+      *,
+      users ( name )
+    `)
       .eq("id", id)
       .single()
 
@@ -37,7 +40,7 @@ if (!task) return <p>Loading...</p>
 }
 {task &&<Input value={task.status} className='p-3 m-2 border border-gray-300 shadow'/>
 }
-{task &&<Input value={task.user_id} className='p-3 m-2 border border-gray-300 shadow' />
+{task &&<Input value={task.users?.name} className='p-3 m-2 border border-gray-300 shadow' />
 }
 {task && <Textarea value={task.description} className='p-3 m-2 border border-gray-300 shadow'/>}
 {task &&<Input value={task.expiry_date} className='p-3 m-2 border border-gray-300 shadow'/>
