@@ -28,10 +28,12 @@ function List() {
       if (userError) throw userError
       console.log("userData", userData)
       const user = userData.user
-      const { data, error } = await supabase
-        .from('tasks')
-        .select('*')
-      // .eq("user_id",userData.user.id)
+      // const { data, error } = await supabase
+      //   .from('tasks')
+      //   .select('*')
+      // // .eq("user_id",userData.user.id)
+
+      const { error, data } = await supabase.rpc("get_user_tasks", { uid: user.id })
 
 
       if (error) {
@@ -44,20 +46,39 @@ function List() {
     } catch (err: any) {
       console.log("Error on fetching tasks:", err.message)
       if (err.message.includes("permission")) {
-              toast.error("Not allowed (RLS policy)")
-            } else {
-              toast.error("Error on Listing")
-            }
+        toast.error("Not allowed (RLS policy)")
+      } else {
+        toast.error("Error on Listing")
+      }
     }
     finally {
       setLoading(false)
     }
   }
 
+  const fetchStatus = async (status: string) => {
+    try {
+      setLoading(true)
+      const { error: userError, data: userData } = await supabase.auth.getUser()
+      if (userError) throw userError
+      console.log("userData", userData)
+      const user = userData.user
+      const { error, data } = await supabase.rpc("get_task_by_status", { task_status: status, uid: user.id })
+      if (error) throw error
+      setTasks(data)
+    } catch (err: any) {
+      console.log("Error in fetching", err.message)
+      toast.error("Error in fetching", err.message)
+    }
+    finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     fetchTasks()
   }, [])
+
   const handleDelete = async (id: any) => {
     try {
       const { error } = await supabase
@@ -90,21 +111,25 @@ function List() {
   return (
     <>
       <div className='bg-gray-200  flex justify-center items-center  flex-col min-h-screen '>
-       
+
         <Sidebar />
         <h2 className='text-blue-400 font-bold'>List of tasks</h2>
 
-
+        <div className='flex p-6 lg:mr-54 ' >
+          <Button className='bg-green-700 text-white p-2 w-full' onClick={fetchTasks}>All</Button>
+          <Button className='bg-green-700  text-white p-2 w-full' onClick={() => fetchStatus("Completed")}>Completed</Button>
+          <Button className='bg-green-700  text-white p-2 w-full' onClick={() => fetchStatus("Not completed")}>Not completed</Button>
+        </div>
         <div className='flex-1 bg-blue-50  w-[300] md:w-[800px] shadow rounded  flex flex-wrap gap-2  justify-center items-center-safe m-2 ml-67 p-2'>
 
 
 
           {tasks.length === 0 ? (
             <div>
-               {loading && <p className="mb-2 text-blue-500">Loading...</p>}
-               <p>No tasks found</p>
+              {loading && <p className="mb-2 text-blue-500">Loading...</p>}
+              <p>No tasks found</p>
             </div>
-           
+
           ) : (
             tasks.map((task) => (
               <div key={task.id} className=' flex  flex-row justify-between items-center w-full md:w-1/3 lg:w-1/3 p-4 m-2 bg-blue-100 rounded-xl shadow-xl '>

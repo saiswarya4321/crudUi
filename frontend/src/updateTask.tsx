@@ -27,11 +27,12 @@ function updateTask() {
         .from("tasks")
         .select("*")
         .eq("id", id)
-        .single()
+         .maybeSingle()
 
       if (error) {
         throw error
       }
+      console.log("data",data)
 
       if (data) {
         setTitle(data.title)
