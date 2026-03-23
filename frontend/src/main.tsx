@@ -13,6 +13,8 @@ import Login from '../src/pages/login'
 import Dashboard from './pages/dashboard'
 import List from '../src/pages/List'
 import ProtectedRoute from './components/ProtectedRoute'
+import Messages from './pages/messages'
+import MessageDashboard from './pages/messageDashboard'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -27,6 +29,8 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/login' element={<Login/>}></Route>
       <Route path='/dashboard' element={<ProtectedRoute><Dashboard/></ProtectedRoute>}></Route>
        <Route path='/list' element={<ProtectedRoute><List/></ProtectedRoute>}></Route>
+       <Route path='/messages' element={<ProtectedRoute><Messages/></ProtectedRoute>}></Route>
+       <Route path='/messagesdashboard' element={<ProtectedRoute><MessageDashboard/></ProtectedRoute>}></Route>
     </Routes>
     </BrowserRouter>
     <ToastContainer />

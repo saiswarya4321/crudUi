@@ -18,6 +18,7 @@ export default function dashboard() {
       if (error) throw error
 
       setUser(data.user)
+      console.log(data.user)
       if (!data.user) {
   navigate("/login")
 }
@@ -42,7 +43,7 @@ export default function dashboard() {
           
           {user ? (
             <div>
-              <p><b>Welcome</b> {user.email}</p>
+              <p><b>Welcome</b> {user.name}</p>
               <p><b>User ID:</b> {user.id}</p>
             </div>
           ) : (

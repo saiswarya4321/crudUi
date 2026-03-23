@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import {toast} from'react-toastify'
 import Sidebar from '../components/Sidebar'
 
+
 function addTask() {
     const [date, setDate] = useState<Date | undefined>(new Date())
   const [title, setTitle] = useState('')
@@ -106,6 +107,7 @@ function addTask() {
           <Input className='focus:outline-none min-w-[400] border border-gray-300 shadow' value={title}
             onChange={(e) => setTitle(e.target.value)} />
           <Label htmlFor="status" className='m-2'>Status <span className='text-red-500'>*</span></Label>
+          
           <Input className='focus:outline-none min-w-[400] border border-gray-300 shadow' value={status}
             onChange={(e) => setStatus(e.target.value)} />
           {/* <Label htmlFor="userId" className='m-2'>User Id <span className='text-red-500'>*</span></Label>
