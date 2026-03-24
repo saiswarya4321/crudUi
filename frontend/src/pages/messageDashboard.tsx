@@ -231,7 +231,14 @@ function messageDashboard() {
                                     }`}
                             >
                                 {msg.text}
+                                <small className='m-2'>
+  {new Date(msg.created_at).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit'
+  })}
+</small>
                             </div>
+                            
                         ))}
                         <div className="mt-4 flex gap-2">
                             <textarea
