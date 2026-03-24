@@ -6,11 +6,13 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Calendar } from "@/components/ui/calendar"
+import { toast } from 'react-toastify'
 
 
 function taskDetails() {
     const{id}=useParams()
     const [task, setTask] = useState(null)
+    const [files, setFiles] = useState([])
 
      useEffect(() => {
     fetchTask()
@@ -31,6 +33,22 @@ function taskDetails() {
       setTask(data)
     }
   }
+  useEffect(() => {
+  if (id) {
+    fetchFiles()
+  }
+}, [id])
+  const fetchFiles=async()=>{
+    try {
+      const {error,data}=await supabase.from("taskfiles")
+      .select("*").eq("task_id",id)
+      if(error) throw error
+      setFiles(data)
+    } catch (error) {
+      console.log(error.message)
+      toast.error("Error in fetching files")
+    }
+  }
 if (!task) return <p>Loading...</p>
   return (
     <div className='bg-gray-100 flex flex-col justify-center items-center min-h-screen'>
@@ -45,7 +63,28 @@ if (!task) return <p>Loading...</p>
 {task && <Textarea value={task.description} className='p-3 m-2 border border-gray-300 shadow'/>}
 {task &&<Input value={task.expiry_date} className='p-3 m-2 border border-gray-300 shadow'/>
 }
-        </div>
+  <div>
+  <h2>Uploaded Files</h2>
+
+  {files.length === 0 ? (
+    <p>No files uploaded</p>
+  ) : (
+    files.map((file) => (
+      <div key={file.id} className="border p-2 my-2">
+        <p>{file.file_name}</p>
+
+        <a
+          href={file.file_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500"
+        >
+          View File
+        </a>
+      </div>
+    ))
+  )}
+</div>      </div>
       
     </div>
   )

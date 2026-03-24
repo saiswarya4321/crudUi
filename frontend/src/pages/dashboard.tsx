@@ -43,7 +43,7 @@ export default function dashboard() {
           
           {user ? (
             <div>
-              <p><b>Welcome</b> {user.name}</p>
+              <p><b>Welcome</b> {user.email}</p>
               <p><b>User ID:</b> {user.id}</p>
             </div>
           ) : (

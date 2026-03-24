@@ -15,6 +15,8 @@ import List from '../src/pages/List'
 import ProtectedRoute from './components/ProtectedRoute'
 import Messages from './pages/messages'
 import MessageDashboard from './pages/messageDashboard'
+import UserProfile from './pages/userProfile'
+import TaskFileUpload from './pages/taskFileUpload'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -31,6 +33,8 @@ createRoot(document.getElementById('root')!).render(
        <Route path='/list' element={<ProtectedRoute><List/></ProtectedRoute>}></Route>
        <Route path='/messages' element={<ProtectedRoute><Messages/></ProtectedRoute>}></Route>
        <Route path='/messagesdashboard' element={<ProtectedRoute><MessageDashboard/></ProtectedRoute>}></Route>
+          <Route path='/userprofile' element={<ProtectedRoute><UserProfile/></ProtectedRoute>}></Route>
+           <Route path='/taskfile' element={<ProtectedRoute><TaskFileUpload/></ProtectedRoute>}></Route>
     </Routes>
     </BrowserRouter>
     <ToastContainer />

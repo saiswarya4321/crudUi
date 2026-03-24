@@ -38,6 +38,12 @@ const Sidebar = () => {
          <Link to="/messagesdashboard" className="hover:bg-blue-700 p-2 rounded">
           Messages
         </Link>
+        <Link to="/userprofile" className="hover:bg-blue-700 p-2 rounded">
+        Profile
+        </Link>
+        <Link to="/taskfile" className="hover:bg-blue-700 p-2 rounded">
+        File upload
+        </Link>
       </nav>
 
       <button
